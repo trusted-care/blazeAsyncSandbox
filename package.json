@@ -1,0 +1,28 @@
+{
+  "name": "asyncSandbox",
+  "private": true,
+  "scripts": {
+    "start": "meteor run",
+    "test": "meteor test --once --driver-package meteortesting:mocha",
+    "test-app": "TEST_WATCH=1 meteor test --full-app --driver-package meteortesting:mocha",
+    "visualize": "meteor --production --extra-packages bundle-visualizer"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.20.7",
+    "@vlcn.io/zone": "^0.1.0",
+    "meteor-node-stubs": "^1.2.5",
+    "lodash": "^4.17.20"
+  },
+  "meteor": {
+    "mainModule": {
+      "client": "client/main.js",
+      "server": "server/main.js"
+    },
+    "testModule": "tests/main.js"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.22.15",
+    "@babel/generator": "^7.22.15",
+    "@babel/preset-env": "^7.22.15"
+  }
+}
