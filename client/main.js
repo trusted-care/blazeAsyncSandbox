@@ -21,32 +21,22 @@ const counter2 = new ReactiveVar(0)
 
 async function getCounter1(){
     await _.sleepAsync(500)
-    return Tracker.withComputation(____secretCurrentComputation____, () => {
-        return counter1.get()
-    })
-
+    return counter1.get()
 }
 
 async function setCounter1(val){
     await _.sleepAsync(500)
-    return Tracker.withComputation(____secretCurrentComputation____, () => {
-        counter1.set(val)
-    })
+    counter1.set(val)
 }
 
 async function getCounter2(){
     await _.sleepAsync(500)
-    return Tracker.withComputation(____secretCurrentComputation____, () => {
-        return counter2.get()
-    })
+    return counter2.get()
 }
 
 async function setCounter2(val){
     await _.sleepAsync(500)
-    return Tracker.withComputation(____secretCurrentComputation____, () => {
-        counter2.set(val)
-    })
-
+    counter2.set(val)
 }
 
 
@@ -60,14 +50,16 @@ TemplateController('testTemplate', {
             console.log('onCreatedAutorun start')
             const current1 = await getCounter1()
             await _.sleepAsync(1000)
-            console.log('⛱')
+                console.log('⛱')
 
-            console.log('onCreated autorun, counter 1:', current1)
-            await _.sleepAsync(1000)
-            console.log('⛱')
-            await setCounter2(42)
-            console.log('onCreatedAutorun end')
+                console.log('onCreated autorun, counter 1:', current1)
+                    await _.sleepAsync(1000)
+                    console.log('⛱')
+                        await setCounter2(42)
+                        console.log('onCreatedAutorun end')
         })
+
+        Meteor.findSomething()
     },
     onRendered() {
         this.autorun(async () => {
