@@ -63,18 +63,26 @@ module.exports = function ({ types: t, template, caller }) {
                     isServer = callerInfo?.arch.startsWith('os.');
                 },
             },
-            Function: function (path) {
+            Function (path) {
                 if (isServer) {
                     return;
                 }
 
+                console.log("Visiting a", path.type)
+
                 if (path.node.async) {
+                    console.log("in block")
+                    // Ensure the body is a block statement (for arrow functions with expression bodies)
+                    if (!t.isBlockStatement(path.node.body)) {
+                        const originalBody = path.node.body;
+                        path.node.body = t.blockStatement([t.returnStatement(originalBody)]);
+                    }
+
                     const initCode = template.ast(`
                         const ____secretCurrentComputation____ = Tracker?.currentComputation || null;
                     `, { preserveComments: true });
 
                     path.get('body').unshiftContainer('body', initCode);
-
                     wrapFollowingStatementsInBlock(path);
                 }
             },
