@@ -16,65 +16,56 @@ _.sleepAsync = async function sleepAsync(i) {
     })
 }
 
-const counter1 = new ReactiveVar(0)
-const counter2 = new ReactiveVar(0)
-
-async function getCounter1(){
-    await _.sleepAsync(500)
-    return counter1.get()
-}
-
-async function setCounter1(val){
-    await _.sleepAsync(500)
-    counter1.set(val)
-}
-
-async function getCounter2(){
-    await _.sleepAsync(500)
-    return counter2.get()
-}
-
-async function setCounter2(val){
-    await _.sleepAsync(500)
-    counter2.set(val)
-}
-
 
 TemplateController('testTemplate', {
     async onCreated() {
-        Meteor.setTimeout(() => {
-            counter1.set(1)
-        }, 1000)
+        /**
+         * Let's see whether Tracker.withComputation really cleans up behind it on time
+         */
 
+        // Autorun A
+        let computationACounter = 1
         this.autorun(async (c) => {
-            console.log('onCreatedAutorun start')
-            const current1 = await getCounter1()
-            await _.sleepAsync(1000)
-                console.log('⛱')
+            c.COMPUTATION_NAME = `A ${computationACounter++}`
+            console.log("A", Tracker.currentComputation?.COMPUTATION_NAME)
+            await Tracker.withComputation(c, async () => {
+                console.log('B', Tracker.currentComputation?.COMPUTATION_NAME)
+                await _.sleepAsync(200)
+                await Tracker.withComputation(c, async () => {
+                    console.log('C', Tracker.currentComputation?.COMPUTATION_NAME)
+                    await _.sleepAsync(200)
+                    await Tracker.withComputation(c, async () => {
+                        console.log('D', Tracker.currentComputation?.COMPUTATION_NAME)
+                        return _.sleepAsync(200)
+                    })
+                })
+            })
 
-                console.log('onCreated autorun, counter 1:', current1)
-                    await _.sleepAsync(1000)
-                    console.log('⛱')
-                        await setCounter2(42)
-                        console.log('onCreatedAutorun end')
+            console.log('E', Tracker.currentComputation?.COMPUTATION_NAME)
         })
 
-        Meteor.findSomething()
+        // see whether we can detect neutrinos / Tracker.currentComputations where we don't want them?
+        // let checkCount = 0
+        // const logCurrentComputationIfExists = function() {
+        //     if (Tracker.currentComputation) {
+        //         console.log('🚝🎏🏢🚝🎏🏢🚝🎏🏢 FOUND A COMPUTATION!!! ', Tracker.currentComputation?.COMPUTATION_NAME)
+        //     }
+        //     checkCount +=1
+        //     if (0 === checkCount % 500) {
+        //         console.log('checking for secret computations', checkCount)
+        //     }
+        // }
+        // Meteor.setInterval(logCurrentComputationIfExists, 0)
+
+        // this.autorun(async (c) => {
+        //     c.COMPUTATION_NAME = 'B'
+        //     console.log('G', Tracker.currentComputation?.COMPUTATION_NAME)
+        //     await _.sleepAsync(1000)
+        //     console.log('H', Tracker.currentComputation?.COMPUTATION_NAME)
+        // })
+
     },
     onRendered() {
-        this.autorun(async () => {
-            console.log('onRenderedAutorun start')
-            await _.sleepAsync(500)
-            console.log('⛱')
-
-            const counter1now = await getCounter1()
-            await _.sleepAsync(500)
-            console.log('⛱')
-
-            const counter2now = await getCounter2()
-            console.log('HEEYOOO', counter1now, counter2now)
-            console.log('onRenderedAutorun end')
-        })
     }
 })
 
