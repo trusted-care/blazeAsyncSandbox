@@ -223,6 +223,20 @@ Blaze.View.prototype.autorun = function (f, _inViewScope, displayName) {
   return comp;
 };
 
+Blaze.View.prototype.autorunAsync = function(f, _inViewScope, displayName) {
+  let fPromise
+  let self = this
+  const newF = async(...args) => {
+    fPromise = f(...args)
+  }
+
+  const c = Blaze.View.prototype.autorun.call(this, newF, _inViewScope, displayName)
+
+  return fPromise.then(() => {
+    return c
+  })
+}
+
 Blaze.View.prototype._errorIfShouldntCallSubscribe = function () {
   var self = this;
 

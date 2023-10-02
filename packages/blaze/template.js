@@ -330,6 +330,11 @@ Blaze.TemplateInstance.prototype.autorun = function (f) {
   return this.view.autorun(f);
 };
 
+Blaze.TemplateInstance.prototype.autorunAsync = function (f) {
+  return this.view.autorunAsync(f);
+};
+
+
 /**
  * @summary A version of [Meteor.subscribe](https://docs.meteor.com/api/pubsub.html#Meteor-subscribe) that is stopped
  * when the template is destroyed.

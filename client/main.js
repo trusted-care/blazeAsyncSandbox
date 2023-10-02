@@ -1,14 +1,13 @@
-import _ from 'lodash'
-
 import { Meteor } from 'meteor/meteor'
 // import { App } from '/imports/ui/App'
 
 import './main.html'
+import './trackerExperiments'
 
 /**
  * Helper for easy sleeping & ASYNC testing
  */
-_.sleepAsync = async function sleepAsync(i) {
+async function sleepAsync(i = 100) {
     return new Promise((resolve, reject) => {
         Meteor.setTimeout((i) => {
             resolve();
@@ -16,9 +15,9 @@ _.sleepAsync = async function sleepAsync(i) {
     })
 }
 
-
 TemplateController('testTemplate', {
     async onCreated() {
+        return
         /**
          * Let's see whether Tracker.withComputation really cleans up behind it on time
          */
@@ -30,13 +29,13 @@ TemplateController('testTemplate', {
             console.log("A", Tracker.currentComputation?.COMPUTATION_NAME)
             await Tracker.withComputation(c, async () => {
                 console.log('B', Tracker.currentComputation?.COMPUTATION_NAME)
-                await _.sleepAsync(200)
+                await sleepAsync(200)
                 await Tracker.withComputation(c, async () => {
                     console.log('C', Tracker.currentComputation?.COMPUTATION_NAME)
-                    await _.sleepAsync(200)
+                    await sleepAsync(200)
                     await Tracker.withComputation(c, async () => {
                         console.log('D', Tracker.currentComputation?.COMPUTATION_NAME)
-                        return _.sleepAsync(200)
+                        return sleepAsync(200)
                     })
                 })
             })
@@ -60,7 +59,7 @@ TemplateController('testTemplate', {
         // this.autorun(async (c) => {
         //     c.COMPUTATION_NAME = 'B'
         //     console.log('G', Tracker.currentComputation?.COMPUTATION_NAME)
-        //     await _.sleepAsync(1000)
+        //     await sleepAsync(1000)
         //     console.log('H', Tracker.currentComputation?.COMPUTATION_NAME)
         // })
 
