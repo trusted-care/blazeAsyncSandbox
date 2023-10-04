@@ -74,26 +74,6 @@
  *
  */
 
-/**
- * Disabled for now because I had problems installing it in our project
- */
-// const generate = require("@babel/generator").default;
-// function log(title = '', path) {
-//     console.log(title, generate(path.node).code)
-// }
-
-
-/**
- * Debugging helper function to just print the first n characters of a string
- *
- * @param str
- * @param length
- * @returns {string|*}
- */
-function truncate(str, length = 100) {
-    return str.length > length ? str.slice(0, length) + '...' : str
-}
-
 module.exports = function ({types: t, template, caller}) {
     let callerInfo
     caller(function (c) {
