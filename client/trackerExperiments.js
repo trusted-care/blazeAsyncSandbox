@@ -20,7 +20,7 @@ TemplateController('trackerExperiments', {
     async onCreated() {
         console.log('onCreated')
 
-        await this.autorunAsync(async () => {
+        await this.autorun(async () => {
             console.log('autorun 1, 0')
             await sleepAsync(100)
             console.log('autorun 1, 1')
@@ -30,11 +30,9 @@ TemplateController('trackerExperiments', {
 
             await sleepAsync(100)
             console.log('/autorun 1')
-        })
+        }).firstRunPromise
 
-        // console.log({autorunPromise})
-
-        await this.autorunAsync(async () => {
+        await this.autorun(async () => {
             console.log('autorun 2, 0')
             await sleepAsync(100)
             console.log('autorun 2, 1')
@@ -44,9 +42,9 @@ TemplateController('trackerExperiments', {
 
             await sleepAsync(100)
             console.log('/autorun 2')
-        })
+        }).firstRunPromise
 
-        await this.autorunAsync(async () => {
+        await this.autorun(async () => {
             console.log('autorun 3, 0')
             await sleepAsync(100)
             console.log('autorun 3, 1')
@@ -56,25 +54,28 @@ TemplateController('trackerExperiments', {
 
             await sleepAsync(100)
             console.log('/autorun 3')
-        })
+        }).firstRunPromise
 
         console.log('/onCreated')
 
     },
     async onRendered() {
         console.log('onRendered')
-        //
+
+        // This'll not work: it'll be executed immediately after the first await yield-ed in .onCreated().
+        // The blaze lifecycle callbacks aren't async-aware & don't await their async functions.
+
         // await Tracker.autorunAsync(async () => {
-        //     console.log('autorun 3, 0')
+        //     console.log('autorun 4, 0')
         //     await sleepAsync(100)
-        //     console.log('autorun 3, 1')
+        //     console.log('autorun 4, 1')
         //
         //     await sleepAsync(100)
-        //     console.log('autorun 3, 2')
+        //     console.log('autorun 4, 2')
         //
         //     await sleepAsync(100)
-        //     console.log('/autorun 3')
-        // })
+        //     console.log('/autorun 4')
+        // }).firstRunPromise
 
         console.log('/onRendered')
 
