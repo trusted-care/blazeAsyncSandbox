@@ -1,4 +1,4 @@
 {
     "presets": ["@babel/preset-env"],
-    "plugins": ["./babelPlugin/plugin.js" /*, "./babelPlugin/plugin_syncAutoruns.js" */]
+    "plugins": ["./babelPlugin/plugin-trackerAsyncMitigation.js"]
 }
